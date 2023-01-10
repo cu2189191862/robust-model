@@ -1,5 +1,5 @@
-from multiprocessing.sharedctypes import Value
-from typing import Dict, Union
+from typing import Dict, Union, List
+
 from robustoptimization.utils.constants import *
 import numpy as np
 
@@ -14,7 +14,7 @@ def exception_handler(comparisons: Dict[str, float], sense: Union[MINIMIZE, MAXI
         raise ValueError(f"Invalid sense '{sense}'.")
 
 
-def mean_value_of_robustization(comparisons: Dict[str, float], sense: Union[MINIMIZE, MAXIMIZE] = MINIMIZE) -> float:
+def mean_value_of_robustization(comparisons: Dict[str, List[float]], sense: Union[MINIMIZE, MAXIMIZE] = MINIMIZE) -> float:
     '''Metric evaluates the value of robustization
     '''
     exception_handler(comparisons, sense)
@@ -57,27 +57,36 @@ def mean_value_of_robustization(comparisons: Dict[str, float], sense: Union[MINI
         return value / observation_count
 
 
-def improvement_of_std(comparisons: Dict[str, float], sense: Union[MINIMIZE, MAXIMIZE] = MINIMIZE) -> float:
+def improvement_of_std(comparisons: Dict[str, List[float]], sense: Union[MINIMIZE, MAXIMIZE] = MINIMIZE) -> float:
     exception_handler(comparisons, sense)
     if sense == MINIMIZE:
         robust_worst = max([i for i in comparisons["robust"] if i is not None])
         deterministic_worst = max(
             [i for i in comparisons["deterministic"] if i is not None])
         worst = max(robust_worst, deterministic_worst)
-        comparisons["robust"] = [
-            i if i != None else worst for i in comparisons["robust"]]
-        comparisons["deterministic"] = [
-            i if i != None else worst for i in comparisons["deterministic"]]
+        r = [i if i != None else worst for i in comparisons["robust"]]
+        d = [i if i != None else worst for i in comparisons["deterministic"]]
 
-        return np.std(comparisons["deterministic"]) / np.std(comparisons["robust"])
+        return np.std(d) / np.std(r)
     else:
         robust_worst = min([i for i in comparisons["robust"] if i is not None])
         deterministic_worst = min(
             [i for i in comparisons["deterministic"] if i is not None])
         worst = min(robust_worst, deterministic_worst)
-        comparisons["robust"] = [
-            i if i != None else worst for i in comparisons["robust"]]
-        comparisons["deterministic"] = [
-            i if i != None else worst for i in comparisons["deterministic"]]
+        r = [i if i != None else worst for i in comparisons["robust"]]
+        d = [i if i != None else worst for i in comparisons["deterministic"]]
 
-        return np.std(comparisons["deterministic"]) / np.std(comparisons["robust"])
+        return np.std(d) / np.std(r)
+
+
+def robust_rate(comparisons: Dict[str, List[float]],) -> float:
+    exception_handler(comparisons)
+    robust_feasible_deterministic_infeasible = 0
+    robust_feasible = 0
+    for i in range(len(comparisons["robust"])):
+        if comparisons["robust"][i] != None and comparisons["deterministic"][i] == None:
+            robust_feasible_deterministic_infeasible += 1
+        if comparisons["robust"][i] != None:
+            robust_feasible += 1
+
+    return robust_feasible_deterministic_infeasible / robust_feasible

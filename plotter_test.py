@@ -21,3 +21,7 @@ plt.ylabel("Improve rate of standard deviation")
 plt.plot(r["gamma"], r["iostds"])
 
 # %%
+plt.title("Robust rate")
+plt.xlabel("Robustness(gamma)")
+plt.ylabel("Robust rate")
+plt.plot(r["gamma"], r["rr"])

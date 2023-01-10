@@ -1,12 +1,19 @@
 # Preventive Maintenance Scheduling Problem
 
-todo: 把不同時間段的遞迴式合併轉成一般式
+approaches:
+- Affinely decision making framework 
+  - 把不同時間段的遞迴式合併轉成一般式
+  - affinely adaptive RO
+- Shown below (in plan horizon)
+- Multistage RO model
+- 這個月看paper
+  - 用 RL 做排程，找 RO 切入點或相反
 ##  Sets
 $T$: Periods taken into consideration, $T = \{0, 1, ..., |T| - 1\}$. 
 > $t = 0$ is the initial state, no decisions involved.
 
 ## Parameters
-### Deterministic
+### Deterministic parameters
 $C^S$: Stockout cost per unit of product.  
 $C^H$: Holding cost per unit of product.  
 $C^{CM}$: Cost of adopting corrective maintenance once.  
@@ -20,7 +27,7 @@ $S^I$: Initial health status of the machine.
 $R$: Recovery of health status after adopting preventive maintenance.  
 $Z$: Health status threshold determine CM is required or not.  
 $M$: Great number.
-### Uncertain
+### Uncertain parameters
 $D^*$: Deterioration rate of health status after a production period.  
 $Q_t$: Demand quantity in period $t$.
 ### Functions

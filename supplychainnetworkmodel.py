@@ -3,7 +3,7 @@ from robustoptimization.components.uncertainparameter import UncertainParameter
 from robustoptimization.components.uncertaintyset.box import Box
 from robustoptimization.utils.constants import *
 from robustoptimization.utils.plotter import generate_evaluations_plot
-from robustoptimization.utils.metrics import mean_value_of_robustization, improvement_of_std
+from robustoptimization.utils.metrics import mean_value_of_robustization, improvement_of_std, robust_rate
 from datetime import datetime
 from typing import Union
 from tqdm import tqdm
@@ -430,8 +430,9 @@ class SupplyChainNetworkModel():
             deter_real, robust_real, deter_wondered, robust_wondered = self.rlm.evaluator(realization=self.__realize(),
                                                                                           decisions=decisions, wondered=wondered)
             try:
-                print(sum(deter_wondered.values()))
-                print(sum(robust_wondered.values()))
+                # print(sum(deter_wondered.values()))
+                # print(sum(robust_wondered.values()))
+                pass
             except:
                 pass
             comparisons["deterministic"].append(deter_real)
@@ -447,7 +448,7 @@ class SupplyChainNetworkModel():
         generate_evaluations_plot(figure_path=os.path.join(self.figure_dir, "evaluations.png"),
                                   comparisons=comparisons, title=f"{self.rlm.name} evaluations plot")
 
-        return mean_value_of_robustization(comparisons, self.rlm.sense), improvement_of_std(comparisons, self.rlm.sense)
+        return mean_value_of_robustization(comparisons, self.rlm.sense), improvement_of_std(comparisons, self.rlm.sense), robust_rate(comparisons)
 
     def log_deterministic_model(self):
         self.rlm.log_deterministic_model()
@@ -461,10 +462,12 @@ class SupplyChainNetworkModel():
     def __realize(self):
         realization = dict()
         for D_l in self.D_star:
-            realization[D_l] = round(random.uniform(350, 550), 4)
+            realization[D_l] = round(random.uniform(450, 550), 4)
+            # realization[D_l] = round(random.uniform(350, 550), 4)
             # realization[D_l] = round(random.normalvariate(450, 33), 4)
         for R_k in self.R_star:
-            realization[R_k] = round(random.uniform(450, 650), 4)
+            realization[R_k] = round(random.uniform(450, 700), 4)
+            # realization[R_k] = round(random.uniform(450, 650), 4)
             # realization[R_k] = round(random.normalvariate(550, 33), 4)
         for C_k in self.C_star:
             for C_ki in C_k:

@@ -3,7 +3,7 @@ from robustoptimization.components.uncertainparameter import UncertainParameter
 from robustoptimization.components.uncertaintyset.box import Box
 from robustoptimization.utils.constants import *
 from robustoptimization.utils.plotter import generate_evaluations_plot
-from robustoptimization.utils.metrics import improvement_of_std, mean_value_of_robustization
+from robustoptimization.utils.metrics import improvement_of_std, mean_value_of_robustization, robust_rate
 from datetime import datetime
 from typing import Union
 from tqdm import tqdm
@@ -145,7 +145,7 @@ class SchedulingModel():
                 print("robust realization:", robust_real)
         generate_evaluations_plot(figure_path=os.path.join(self.figure_dir, "evaluations.png"),
                                   comparisons=comparisons, title=f"{self.rlm.name} evaluations plot")
-        return mean_value_of_robustization(comparisons, self.rlm.sense), improvement_of_std(comparisons, self.rlm.sense)
+        return mean_value_of_robustization(comparisons, self.rlm.sense), improvement_of_std(comparisons, self.rlm.sense), robust_rate(comparisons)
 
     def get_deterministic_solutions(self):
         return self.rlm.get_deterministic_solutions()

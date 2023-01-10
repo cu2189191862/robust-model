@@ -28,12 +28,12 @@ def scheduling_examples(robustness=1) -> None:
     schm.log_robust_counterpart()
     schm.solve()
     schm.log_solution()
-    mvor, iostd = schm.evaluate(sample=sample_count, seed=5, verbose=False)
+    mvor, iostd, rr = schm.evaluate(sample=sample_count, seed=5, verbose=False)
     # ro_sols = schm.get_robust_solutions()
     # det_sols = schm.get_deterministic_solutions()
     # for t in schm.T:
     #     print(ro_sols[schm.s[t]], det_sols[schm.s[t]])
-    return mvor, iostd
+    return mvor, iostd, rr
 
 
 def scn_examples(robustness=0.3) -> Dict[str, float]:
@@ -68,7 +68,8 @@ def scn_examples(robustness=0.3) -> Dict[str, float]:
         scnm.log_solution()
         objectives.append(scnm.get_robust_objective_value())
         # evaluation
-        mvor, iostd = scnm.evaluate(sample=sample_count, seed=5, verbose=False)
+        mvor, iostd, rr = scnm.evaluate(
+            sample=sample_count, seed=5, verbose=False)
         print(f"replication-{i} model expected objective: Robust = {scnm.get_robust_objective_value()}, Determined (lower bound) = {scnm.get_deterministic_model_objective_value()}")
         # global ro_sols
         # global det_sols
@@ -76,23 +77,27 @@ def scn_examples(robustness=0.3) -> Dict[str, float]:
         # det_sols = scnm.get_deterministic_solutions()
 
     # print(f"mean: {np.mean(objectives)}, std: {np.std(objectives)}")
-    return mvor, iostd
+    return mvor, iostd, rr
 
 
 def main() -> None:
     mvors = list()
     iostds = list()
-    for r in np.arange(0.3, 0.31, 0.1):
+    rrs = list()
+    for r in np.arange(0.3, 0.5, 0.01):
         print(f"-------------------{r}------------------")
-        mvor, iostd = scn_examples(robustness=r)
+        mvor, iostd, rr = scn_examples(robustness=r)
         mvors.append(mvor)
         iostds.append(iostd)
-        print(mvor, iostd)
-    records = pd.DataFrame(zip(mvors, iostds), columns=["mvors", "iostds"])
+        rrs.append(rr)
+        print(mvor, iostd, rr)
+    records = pd.DataFrame(zip(mvors, iostds, rrs), columns=[
+                           "mvors", "iostds", "rrs"])
     records.to_csv("records.csv", index=False)
 
     # print("mean value of robustness (PM)", scheduling_examples(robustness=1))
     # scheduling_examples()
+
 
     # model_type = sys.argv[1]
     # if model_type == "--scn":
