@@ -5,6 +5,7 @@ from typing import Dict
 import os
 import numpy as np
 import pandas as pd
+import sys
 
 
 def scheduling_examples(robustness=1) -> None:
@@ -81,30 +82,32 @@ def scn_examples(robustness=0.3) -> Dict[str, float]:
 
 
 def main() -> None:
-    mvors = list()
-    iostds = list()
-    rrs = list()
-    for r in np.arange(0.3, 0.5, 0.01):
-        print(f"-------------------{r}------------------")
-        mvor, iostd, rr = scn_examples(robustness=r)
-        mvors.append(mvor)
-        iostds.append(iostd)
-        rrs.append(rr)
-        print(mvor, iostd, rr)
-    records = pd.DataFrame(zip(mvors, iostds, rrs), columns=[
-                           "mvors", "iostds", "rrs"])
-    records.to_csv("records.csv", index=False)
+    # mvors = list()
+    # iostds = list()
+    # rrs = list()
+    # for r in np.arange(0.3, 0.5, 0.01):
+    #     print(f"-------------------{r}------------------")
+    #     mvor, iostd, rr = scn_examples(robustness=r)
+    #     mvors.append(mvor)
+    #     iostds.append(iostd)
+    #     rrs.append(rr)
+    #     print(mvor, iostd, rr)
+    # records = pd.DataFrame(zip(mvors, iostds, rrs), columns=[
+    #                        "mvors", "iostds", "rrs"])
+    # records.to_csv("records.csv", index=False)
 
     # print("mean value of robustness (PM)", scheduling_examples(robustness=1))
     # scheduling_examples()
 
 
-    # model_type = sys.argv[1]
-    # if model_type == "--scn":
-    #     scn_examples()
-    # elif model_type == "--sch":
-    #     scheduling_examples()
-    # else:
-    #     raise ValueError(f"Invalid model type argv: {model_type}")
+    model_type = sys.argv[1]
+    if model_type == "--scn":
+        mvor, iostd, rr = scn_examples()
+    elif model_type == "--sch":
+        mvor, iostd, rr = scheduling_examples()
+    else:
+        raise ValueError(f"Invalid model type argv: {model_type}")
+    print(f'mean_value_of_robustization: {mvor}, improvement_of_std: {iostd}, robust_rate: {rr}')
+
 if __name__ == "__main__":
     main()
