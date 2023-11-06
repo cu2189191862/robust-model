@@ -1,5 +1,5 @@
 # Preventive Maintenance Scheduling Problem
-
+<!-- 
 approaches:
 - Affinely decision making framework 
   - 把不同時間段的遞迴式合併轉成一般式
@@ -7,7 +7,7 @@ approaches:
 - Shown below (in plan horizon)
 - Multistage RO model
 - 這個月看paper
-  - 用 RL 做排程，找 RO 切入點或相反
+  - 用 RL 做排程，找 RO 切入點或相反 -->
 ##  Sets
 $T$: Periods taken into consideration, $T = \{0, 1, ..., |T| - 1\}$. 
 > $t = 0$ is the initial state, no decisions involved.
@@ -129,35 +129,3 @@ $s_t \in [0, 1], t \in T$
 $z^P_t \in \{0, 1\}, t \in T$  
 $b_t \in \mathbb{N}, t \in T$  
 $h_t \in \mathbb{N}, t \in T$
-
---- 
-candidate
-## Sets
-<!-- $P$: Set of time periods taken into consideration   -->
-$L$: Set of production lines  
-$O$: Set of orders
-
-## Parameters
-$T^E_o$: Earliest start time of producing order $o$  
-$T^L_o$: Lastest finish time of producing order $o$  
-$Q_o$: Required quantity of order $o$  
-$Y_l$: Yielding rate of production line $l$  
-$M$: Great number  
-$P$: Penalty of unit time lateness  
-
-
-## Variables
-$x_{lo}$: Start time of order $o$ in production line $l$  
-$z_{lo}$: Whether the order $o$ is assigned to the production line $l$  
-
-## Objective
-
-## Constraints
-Every order should be assigned to a production line  
-$x_{lo} \leq Mz_{lo},~ \forall l \in L,~o \in O$  
-$\displaystyle{\sum_{l \in L} z_{lo} = 1,~\forall o \in O}$  
-
-
-Production exclusive  
-$x_{l^\prime o} \geq  or,~\forall l^\prime \in L,~l \in L \setminus \{l^\prime\},~o \in O$
-
